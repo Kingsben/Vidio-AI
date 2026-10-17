@@ -44,7 +44,7 @@ function isIsoDate(value: unknown): value is string {
   return Number.isFinite(date.getTime()) && date.toISOString() === value
 }
 
-function isProjectFormat(value: unknown): value is ProjectFormat {
+export function isProjectFormat(value: unknown): value is ProjectFormat {
   return typeof value === 'string' && projectFormats.some((format) => format === value)
 }
 
@@ -96,7 +96,7 @@ function parseProjects(serialized: string | null): Project[] {
   return projects
 }
 
-function validateInput(input: ProjectInput): ProjectInput {
+export function validateProjectInput(input: ProjectInput): ProjectInput {
   const title = input.title.trim()
   const brief = input.brief.trim()
   if (!title || !brief || !isProjectFormat(input.format)) {
@@ -129,7 +129,7 @@ export class LocalProjectRepository implements ProjectRepository {
   }
 
   async create(input: ProjectInput): Promise<Project> {
-    const normalizedInput = validateInput(input)
+    const normalizedInput = validateProjectInput(input)
     const projects = this.read()
     const id = this.createId()
     if (!id || projects.some((project) => project.id === id)) {
@@ -142,7 +142,7 @@ export class LocalProjectRepository implements ProjectRepository {
   }
 
   async update(id: string, input: ProjectInput): Promise<Project> {
-    const normalizedInput = validateInput(input)
+    const normalizedInput = validateProjectInput(input)
     const projects = this.read()
     const index = projects.findIndex((project) => project.id === id)
     if (index < 0) throw new ProjectRepositoryError('This project no longer exists.')

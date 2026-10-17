@@ -7,9 +7,34 @@ export interface SupabaseConfig {
 
 export interface Database {
   public: {
-    Tables: Record<never, never>
+    Tables: {
+      projects: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          brief: string
+          format: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          title: string
+          brief?: string
+          format?: string
+        }
+        Update: {
+          title?: string
+          brief?: string
+          format?: string
+        }
+        Relationships: []
+      }
+    }
     Views: Record<never, never>
     Functions: Record<never, never>
+    Enums: Record<never, never>
+    CompositeTypes: Record<never, never>
   }
 }
 

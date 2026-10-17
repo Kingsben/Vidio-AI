@@ -1,0 +1,374 @@
+.animation-showcase {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.animation-showcase-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.animation-showcase-heading .eyebrow {
+  flex-shrink: 0;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+}
+
+.animation-showcase-heading .eyebrow > span {
+  color: var(--text-muted);
+}
+
+.animation-showcase-heading h2 {
+  margin-top: 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 2.2vw, 27px);
+  font-weight: 400;
+  letter-spacing: -0.45px;
+}
+
+.animation-showcase-intro {
+  color: var(--text-muted);
+  font-size: 9px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.animation-feature {
+  min-width: 0;
+}
+
+.animation-player-frame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  background: #050505;
+}
+
+.animation-player {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #050505;
+  object-fit: contain;
+}
+
+.animation-play-toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 46px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgb(255 255 255 / 60%);
+  border-radius: 2px;
+  color: #fff;
+  background: rgb(10 10 10 / 82%);
+  font: inherit;
+  font-size: 10px;
+  transition: background-color 160ms ease;
+}
+
+.animation-play-toggle:hover {
+  background: #242424;
+}
+
+.animation-play-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.animation-play-toggle > span {
+  font-size: 11px;
+}
+
+.animation-player-error {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 24px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.animation-player-error > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.animation-feature-caption {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 11px;
+}
+
+.animation-film-style,
+.animation-film-duration {
+  color: var(--text-muted);
+  font-size: 7px;
+  letter-spacing: 0.9px;
+}
+
+.animation-film-style > span {
+  color: var(--text-secondary);
+}
+
+.animation-feature-caption h3 {
+  margin-top: 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 400;
+  letter-spacing: -0.35px;
+}
+
+.animation-feature-caption > div > p:last-child {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.animation-film-duration {
+  flex-shrink: 0;
+  padding-bottom: 3px;
+  white-space: nowrap;
+  letter-spacing: 0.25px;
+}
+
+.animation-film-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.animation-film-option {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  padding: 0 0 7px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  opacity: 0.68;
+  transition: border-color 180ms ease, opacity 180ms ease;
+}
+
+.animation-film-option:hover,
+.animation-film-option.is-active {
+  border-color: var(--text-primary);
+  opacity: 1;
+}
+
+.animation-film-option:focus-visible {
+  outline-offset: 3px;
+}
+
+.animation-film-poster {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-elevated);
+}
+
+.animation-film-poster > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.animation-film-option:hover .animation-film-poster > img,
+.animation-film-option.is-active .animation-film-poster > img {
+  transform: scale(1.04);
+}
+
+.animation-film-select {
+  position: absolute;
+  inset: auto 4px 4px auto;
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  min-height: 19px;
+  padding-inline: 5px;
+  background: rgb(10 10 10 / 76%);
+  color: white;
+  font-size: 6px;
+  letter-spacing: 0.45px;
+}
+
+.animation-film-option.is-active .animation-film-select {
+  background: var(--text-primary);
+  color: var(--background);
+}
+
+.animation-film-option-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.animation-film-number {
+  overflow: hidden;
+  width: 100%;
+  color: var(--text-muted);
+  font-size: 6px;
+  line-height: 1.5;
+  letter-spacing: 0.4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.animation-film-option-title {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 3px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(10px, 1vw, 13px);
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.animation-film-option-duration {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 7px;
+}
+
+.animation-showcase-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 11px;
+}
+
+.animation-showcase-footer > p {
+  color: var(--text-muted);
+  font-size: 8px;
+  line-height: 1.6;
+}
+
+.animation-showcase-footer > a {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  color: var(--text-secondary);
+  font-size: 8px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 1100px) {
+  .animation-showcase-heading {
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .animation-showcase-intro {
+    text-align: left;
+  }
+}
+
+@media (max-width: 860px) {
+  .animation-film-list {
+    gap: 7px;
+  }
+
+  .animation-film-number {
+    font-size: 5px;
+  }
+
+  .animation-film-option-title {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 620px) {
+  .animation-showcase-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 9px;
+  }
+
+  .animation-showcase-heading .eyebrow {
+    font-size: 7px;
+  }
+
+  .animation-showcase-intro {
+    font-size: 9px;
+  }
+
+  .animation-feature-caption h3 {
+    font-size: 20px;
+  }
+
+  .animation-feature-caption > div > p:last-child {
+    font-size: 8px;
+  }
+
+  .animation-film-list {
+    grid-template-columns: repeat(5, minmax(90px, 1fr));
+    overflow-x: auto;
+    padding: 1px 1px 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .animation-film-option {
+    scroll-snap-align: start;
+  }
+
+  .animation-film-option-title {
+    font-size: 11px;
+  }
+
+  .animation-showcase-footer {
+    flex-direction: column;
+    gap: 1px;
+  }
+}
+
+@media (max-width: 380px) {
+  .animation-feature-caption {
+    align-items: flex-start;
+  }
+
+  .animation-film-duration {
+    padding-top: 2px;
+    font-size: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animation-film-poster > img {
+    transition: none;
+  }
+}

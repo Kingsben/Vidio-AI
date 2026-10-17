@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
 import type { Project, ProjectFormat, ProjectInput } from '../data/projects'
-import { getProjectRepository } from '../data/projects'
+import { getCloudProjectRepository } from '../data/cloudProjects'
 import { projectFormats } from '../data/projects'
 
 const formatLabels: Record<ProjectFormat, { title: string; ratio: string }> = {
@@ -16,32 +17,35 @@ function getErrorMessage(error: unknown) {
 }
 
 function ProjectEditorPage() {
+  const { session } = useAuth()
+  const userId = session?.user.id
   const { projectId } = useParams()
   const navigate = useNavigate()
   const isEditing = Boolean(projectId)
-  const [loadResult, setLoadResult] = useState<{ id: string; project?: Project; error?: string }>()
+  const [loadResult, setLoadResult] = useState<{ id: string; userId: string; project?: Project; error?: string }>()
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string>()
 
   useEffect(() => {
-    if (!projectId) return
+    if (!projectId || !userId) return
     let isCurrent = true
     void Promise.resolve()
-      .then(() => getProjectRepository().get(projectId))
+      .then(async () => (await getCloudProjectRepository(userId)).get(projectId))
       .then((savedProject) => {
-        if (isCurrent) setLoadResult({ id: projectId, project: savedProject })
+        if (isCurrent) setLoadResult({ id: projectId, userId, project: savedProject })
       })
       .catch((cause: unknown) => {
-        if (isCurrent) setLoadResult({ id: projectId, error: getErrorMessage(cause) })
+        if (isCurrent) setLoadResult({ id: projectId, userId, error: getErrorMessage(cause) })
       })
     return () => {
       isCurrent = false
     }
-  }, [projectId])
+  }, [projectId, userId])
 
-  const isLoading = Boolean(projectId && loadResult?.id !== projectId)
-  const project = projectId && loadResult?.id === projectId ? loadResult.project : undefined
-  const loadError = projectId && loadResult?.id === projectId ? loadResult.error : undefined
+  const hasCurrentProjectResult = Boolean(projectId && userId && loadResult?.id === projectId && loadResult.userId === userId)
+  const isLoading = Boolean(projectId && !hasCurrentProjectResult)
+  const project = hasCurrentProjectResult ? loadResult?.project : undefined
+  const loadError = hasCurrentProjectResult ? loadResult?.error : undefined
 
   async function saveProject(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,13 +61,20 @@ function ProjectEditorPage() {
       brief: String(formData.get('brief') ?? ''),
       format,
     }
+    if (!userId) {
+      setError('Sign in to save cloud projects.')
+      return
+    }
     setIsSaving(true)
     setError(undefined)
     try {
-      const saved = projectId
-        ? await getProjectRepository().update(projectId, input)
-        : await getProjectRepository().create(input)
-      navigate(`/app/projects/${encodeURIComponent(saved.id)}`)
+      if (projectId) {
+        const saved = await (await getCloudProjectRepository(userId)).update(projectId, input)
+        setLoadResult({ id: saved.id, userId, project: saved })
+      } else {
+        const saved = await (await getCloudProjectRepository(userId)).create(input)
+        navigate(`/app/projects/${encodeURIComponent(saved.id)}`)
+      }
     } catch (cause) {
       setError(getErrorMessage(cause))
     } finally {
@@ -72,10 +83,10 @@ function ProjectEditorPage() {
   }
 
   async function deleteProject() {
-    if (!project || !window.confirm(`Delete “${project.title}”? This removes the saved draft from this browser.`)) return
+    if (!project || !userId || !window.confirm(`Delete “${project.title}” from your cloud projects?`)) return
     setError(undefined)
     try {
-      await getProjectRepository().delete(project.id)
+      await (await getCloudProjectRepository(userId)).delete(project.id)
       navigate('/app')
     } catch (cause) {
       setError(getErrorMessage(cause))
@@ -98,7 +109,7 @@ function ProjectEditorPage() {
       <section className="workspace-empty-state workspace-editor-state">
         <p className="eyebrow">DRAFT NOT FOUND</p>
         <h1>This project isn’t saved here.</h1>
-        <p>It may have been removed, or it may belong to another browser.</p>
+        <p>This project is unavailable or does not belong to the signed-in account.</p>
         <Link className="workspace-button workspace-button-secondary" to="/app">Back to projects</Link>
       </section>
     )
@@ -112,7 +123,7 @@ function ProjectEditorPage() {
           <p className="eyebrow">{project ? 'PROJECT BRIEF' : 'NEW PROJECT'}</p>
           <h1>{project ? 'Shape the brief.' : 'Start with an idea.'}</h1>
           <p className="workspace-page-description">
-            Keep the essentials together. This creates a local draft, not a generated video.
+            Keep the essentials together in your account. This saves a project brief, not a generated video.
           </p>
         </div>
         {project && (
@@ -146,7 +157,7 @@ function ProjectEditorPage() {
             placeholder="Describe the story, mood, or message you want to explore…"
             defaultValue={project?.brief}
           />
-          <span className="field-hint">Your notes stay private in this browser and are not sent to an AI service.</span>
+          <span className="field-hint">Your brief is saved to your account and is not sent to an AI service.</span>
         </label>
         <fieldset className="workspace-field format-field">
           <legend>Intended video format</legend>
@@ -170,7 +181,7 @@ function ProjectEditorPage() {
           </button>
         </div>
       </form>
-      <p className="workspace-trust-note">Drafts are stored in this browser only. They are not synced or backed up to an account.</p>
+      <p className="workspace-trust-note">Cloud projects are private to your account. Existing browser-local drafts remain untouched and are not migrated.</p>
     </div>
   )
 }

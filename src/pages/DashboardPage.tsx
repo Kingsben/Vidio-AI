@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
 import type { Project } from '../data/projects'
-import { getProjectRepository } from '../data/projects'
+import { getCloudProjectRepository } from '../data/cloudProjects'
+import CreativeInspiration from '../components/CreativeInspiration'
+import { Icon } from '../components/Brand'
+import './DashboardPage.css'
 
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : 'Something went wrong while loading your projects.'
@@ -12,17 +16,26 @@ function formatDate(value: string) {
 }
 
 function DashboardPage() {
+  const { session } = useAuth()
+  const userId = session?.user.id
+  const location = useLocation()
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [loadedUserId, setLoadedUserId] = useState<string>()
   const [loadError, setLoadError] = useState<string>()
-  const [actionError, setActionError] = useState<string>()
+  const [actionError, setActionError] = useState<{ userId: string; message: string }>()
   const [refreshIndex, setRefreshIndex] = useState(0)
   const [deletingId, setDeletingId] = useState<string>()
 
   useEffect(() => {
     let isCurrent = true
+    if (!userId) {
+      return () => {
+        isCurrent = false
+      }
+    }
     void Promise.resolve()
-      .then(() => getProjectRepository().list())
+      .then(async () => (await getCloudProjectRepository(userId)).list())
       .then((savedProjects) => {
         if (isCurrent) {
           setProjects(savedProjects)
@@ -33,49 +46,87 @@ function DashboardPage() {
         if (isCurrent) setLoadError(getErrorMessage(cause))
       })
       .finally(() => {
-        if (isCurrent) setIsLoading(false)
+        if (isCurrent) {
+          setLoadedUserId(userId)
+          setIsLoading(false)
+        }
       })
     return () => {
       isCurrent = false
     }
-  }, [refreshIndex])
+  }, [refreshIndex, userId])
+
+  useEffect(() => {
+    if (location.hash !== '#inspiration') return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    document.getElementById('inspiration')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' })
+  }, [location.hash])
 
   async function deleteProject(project: Project) {
-    if (!window.confirm(`Delete “${project.title}”? This removes the saved draft from this browser.`)) return
+    if (!userId || !window.confirm(`Delete “${project.title}” from your cloud projects?`)) return
     setDeletingId(project.id)
     setActionError(undefined)
     try {
-      await getProjectRepository().delete(project.id)
+      await (await getCloudProjectRepository(userId)).delete(project.id)
       setProjects((current) => current.filter(({ id }) => id !== project.id))
     } catch (cause) {
-      setActionError(getErrorMessage(cause))
+      setActionError({ userId, message: getErrorMessage(cause) })
     } finally {
       setDeletingId(undefined)
     }
   }
 
-  const error = loadError ?? actionError
+  const projectsReady = Boolean(userId && loadedUserId === userId && !isLoading)
+  const error = projectsReady
+    ? loadError ?? (actionError && actionError.userId === userId ? actionError.message : undefined)
+    : undefined
 
   return (
     <div className="dashboard-page">
-      <div className="workspace-page-heading">
-        <div>
-          <p className="eyebrow">YOUR WORKSPACE</p>
-          <h1>Projects</h1>
-          <p className="workspace-page-description">A considered place to shape your next video.</p>
+      <section className="dashboard-intro" aria-labelledby="dashboard-heading">
+        <div className="dashboard-intro-copy">
+          <p className="eyebrow">YOUR CREATIVE WORKSPACE</p>
+          <h1 id="dashboard-heading">What are we making today?</h1>
+          <p>Explore visual references, shape a brief, and keep your next video idea in one place.</p>
         </div>
-        <Link className="workspace-button workspace-button-primary" to="/app/projects/new">
-          <span aria-hidden="true">＋</span> New project
+        <Link className="workspace-button workspace-button-primary dashboard-create-brief" to="/app/projects/new">
+          <span aria-hidden="true">＋</span> Create project brief
         </Link>
-      </div>
+      </section>
 
-      <section className="projects-section" aria-labelledby="projects-heading">
+      <section className="creation-options" aria-label="Creation options">
+        <div className="creation-option-live">
+          <span className="creation-option-icon" aria-hidden="true"><Icon name="edit" /></span>
+          <span className="creation-option-copy">
+            <strong>Project brief</strong>
+            <span>Available now · saved to your account</span>
+          </span>
+          <Link to="/app/projects/new" aria-label="Create a project brief"><Icon name="arrow" /></Link>
+        </div>
+        <ul className="creation-option-upcoming">
+          {[
+            ['AI video', 'In development'],
+            ['AI animation', 'In development'],
+            ['Video editing', 'In development'],
+            ['Social publishing', 'Planned'],
+          ].map(([name, status]) => (
+            <li key={name}>
+              <span>{name}</span>
+              <small>{status}</small>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <CreativeInspiration />
+
+      <section className="projects-section" id="projects" aria-labelledby="projects-heading">
         <div className="projects-section-heading">
           <div>
-            <h2 id="projects-heading">Recent projects</h2>
-            {!isLoading && !loadError && <span>{projects.length} {projects.length === 1 ? 'draft' : 'drafts'}</span>}
+            <h2 id="projects-heading">Recent project briefs</h2>
+            {projectsReady && !loadError && <span>{projects.length} {projects.length === 1 ? 'draft' : 'drafts'}</span>}
           </div>
-          <p>Saved locally in this browser</p>
+          <Link className="workspace-text-button projects-new-link" to="/app/projects/new">New brief <span aria-hidden="true">↗</span></Link>
         </div>
 
         {error && (
@@ -95,16 +146,16 @@ function DashboardPage() {
             )}
           </div>
         )}
-        {isLoading && <p className="workspace-loading" role="status">Loading your projects…</p>}
-        {!isLoading && !error && projects.length === 0 && (
-          <div className="workspace-empty-state">
+        {!projectsReady && <p className="workspace-loading" role="status">Loading your cloud projects…</p>}
+        {projectsReady && !error && projects.length === 0 && (
+          <div className="workspace-empty-state dashboard-empty-state">
             <span className="empty-state-mark" aria-hidden="true">＋</span>
-            <h3>Your first idea starts here.</h3>
-            <p>Create a project brief to keep the title, direction, and intended format together.</p>
-            <Link className="workspace-button workspace-button-secondary" to="/app/projects/new">Create a project</Link>
+            <h3>No project briefs yet.</h3>
+            <p>Start with a title, creative direction, and intended format. This saves a project brief, not a generated video.</p>
+            <Link className="workspace-button workspace-button-secondary" to="/app/projects/new">Create a project brief</Link>
           </div>
         )}
-        {!isLoading && !loadError && projects.length > 0 && (
+        {projectsReady && !error && projects.length > 0 && (
           <ul className="project-list">
             {projects.map((project) => (
               <li className="project-card" key={project.id}>
@@ -134,7 +185,7 @@ function DashboardPage() {
         )}
       </section>
 
-      <p className="workspace-trust-note">Your project briefs stay in this browser. Vidio AI does not upload or sync them.</p>
+      <p className="workspace-trust-note">Cloud projects are private to your account. Existing browser-local drafts remain untouched and are not migrated.</p>
     </div>
   )
 }

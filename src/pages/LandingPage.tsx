@@ -1,58 +1,55 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import CreativeInspiration from '../components/CreativeInspiration'
 import { Brand, Icon } from '../components/Brand'
-import { Photo } from '../components/Photo'
-import { StudioPreview } from '../components/StudioPreview'
+import { useAuth } from '../auth/AuthContext'
 import '../App.css'
+import './LandingPage.css'
 
-const photoCredits = `${import.meta.env.BASE_URL}photography-credits.md`
-
-const capabilityGroups = [
+const creativeDirections = [
   {
-    number: '01',
-    title: 'Find your starting point.',
-    description: 'A few words. A still image. The beginning of a story.',
-    features: [
-      ['AI Video Generation', 'Develop scripts and turn text prompts into video scenes.'],
-      ['Image-to-Video', 'Explore movement and atmosphere from a still image.'],
-    ],
+    title: 'Text to video',
+    detail: 'PROMPT-LED CREATION',
   },
   {
-    number: '02',
-    title: 'Make the details yours.',
-    description: 'Shape the rhythm, the voice and everything in between.',
-    features: [
-      ['Video Editor', 'Arrange scenes, refine your cuts and set the pace.'],
-      ['AI Voice Studio', 'Write narration and find the voice for your story.'],
-      ['Subtitles', 'Create and refine captions that carry your message.'],
-    ],
+    title: 'Image to video',
+    detail: 'STILLS INTO MOTION',
   },
   {
-    number: '03',
-    title: 'Give your story a home.',
-    description: 'Keep your work together. Decide when the world sees it.',
-    features: [
-      ['My Creations', 'Organize your videos, assets and works in progress.'],
-      ['Social Publishing', 'Publish to YouTube and Facebook, or schedule for later.'],
-    ],
+    title: 'Cinematic stories',
+    detail: 'REALISM & ATMOSPHERE',
+  },
+  {
+    title: 'Cartoons & animation',
+    detail: '2D, 3D & CHARACTER',
+  },
+  {
+    title: 'Marketing & products',
+    detail: 'CAMPAIGNS WITH IMPACT',
+  },
+  {
+    title: 'Music & motion',
+    detail: 'VISUAL RHYTHM',
+  },
+  {
+    title: 'Learning & education',
+    detail: 'IDEAS MADE CLEAR',
+  },
+  {
+    title: 'Social shorts',
+    detail: 'MADE FOR EVERY FEED',
   },
 ]
 
-const workflow = [
-  ['Idea', 'A prompt, script or image.'],
-  ['Create', 'Scenes and narration.'],
-  ['Edit', 'The cut, sound and captions.'],
-  ['Review', 'A final look at every detail.'],
-  ['Publish', 'Share now or plan ahead.'],
-]
-
-function App() {
+function LandingPage() {
+  const { session } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
   const closeMenu = () => setMenuOpen(false)
+  const primaryHref = session ? '/app' : '/auth/register'
 
   return (
-    <>
+    <div className="landing-page">
       <a className="skip-link" href="#main" onClick={closeMenu}>Skip to content</a>
       <header
         className="site-header"
@@ -76,129 +73,85 @@ function App() {
             <Icon name={menuOpen ? 'close' : 'menu'} />
           </button>
           <nav id="main-navigation" aria-label="Main navigation" className={menuOpen ? 'navigation is-open' : 'navigation'}>
-            <a href="#studio" onClick={closeMenu}>The studio</a>
-            <a href="#capabilities" onClick={closeMenu}>Capabilities</a>
-            <a href="#workflow" onClick={closeMenu}>The process</a>
-            <Link to="/app" className="nav-cta" onClick={closeMenu}>Open workspace <Icon name="arrow" /></Link>
+            <a href="#inspiration" onClick={closeMenu}>Explore styles</a>
+            <a href="#creative-direction" onClick={closeMenu}>What we’re building</a>
+            <a href="#available-now" onClick={closeMenu}>Your workspace</a>
+            <Link to={primaryHref} className="nav-cta" onClick={closeMenu}>
+              {session ? 'Open workspace' : 'Create a brief'} <Icon name="arrow" />
+            </Link>
           </nav>
         </div>
       </header>
 
       <main id="main" tabIndex={-1}>
-        <section className="hero container" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow">A NEW PERSPECTIVE ON VIDEO</p>
-            <h1 id="hero-title">Stories start<br />with a point<br />of <span>view.</span></h1>
-            <p className="hero-description">
-              An AI video studio in development. Bring words and images into motion,
-              shape every scene, and take your story from first thought to published video.
+        <section className="cartoon-hero container" aria-labelledby="hero-title">
+          <div className="cartoon-hero-copy">
+            <p className="eyebrow"><span className="status-dot" /> AN AI VIDEO STUDIO IN DEVELOPMENT</p>
+            <h1 id="hero-title">Ideas, in <span>motion.</span></h1>
+            <p className="cartoon-hero-description">
+              Explore independent film and reference footage for cinematic stories, animation, products, nature, and more.
             </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#studio" onClick={closeMenu}>
-                Explore the studio <Icon name="arrow" />
-              </a>
-              <Link className="text-link" to="/app/projects/new" onClick={closeMenu}>Start a project <Icon name="arrow" /></Link>
-              <a className="text-link" href="#capabilities" onClick={closeMenu}>What we’re building <Icon name="down" /></a>
+            <div className="cartoon-hero-actions">
+              <Link className="button button-primary" to={primaryHref} onClick={closeMenu}>
+                {session ? 'Open your workspace' : 'Create a project brief'} <Icon name="arrow" />
+              </Link>
+              <a className="text-link" href="#inspiration" onClick={closeMenu}>Explore video styles <Icon name="down" /></a>
             </div>
-            <p className="hero-note"><span className="status-dot" /> In development. A first look, not a live tool.</p>
+            <p className="cartoon-hero-note">Create a project brief today. AI generation, editing, and publishing remain in development.</p>
           </div>
-          <figure className="hero-visual">
-            <Photo name="coast" priority sizes="(max-width: 700px) 100vw, 55vw" />
-            <div className="hero-image-top"><span>FIELD NOTES</span><span>01 / THE COAST</span></div>
-            <figcaption className="hero-image-caption">
-              <div><span>A STUDY IN MOVEMENT</span><p>Follow a different current.</p></div>
-              <span className="image-caption-icon" aria-hidden="true"><Icon name="arrow" /></span>
-            </figcaption>
-            <span className="hero-image-credit">Illustrative photography · Fran Bertucci / Pexels</span>
-          </figure>
         </section>
 
-        <div className="container introduction">
-          <p>From a passing thought<br />to something worth watching.</p>
-          <span>CREATE. EDIT. SHARE.<br /><span>One connected vision for video.</span></span>
+        <div className="container">
+          <CreativeInspiration />
         </div>
 
-        <section id="studio" className="studio-section container section" aria-labelledby="studio-title">
+        <section id="creative-direction" className="container creative-direction-section" aria-labelledby="vision-title">
           <div className="section-heading">
-            <div><p className="eyebrow">01 / THE WORKSPACE</p><h2 id="studio-title">A place for the<br />whole picture.</h2></div>
-            <p>Your scenes, voice and final cut, considered together.
-              This is an early concept of the Vidio AI studio—not a functioning editor.</p>
+            <div><p className="eyebrow">A STUDIO FOR EVERY SCREEN</p><h2 id="vision-title">One idea.<br />Many ways to move.</h2></div>
+            <p>Children’s animation is one of our creative pillars — alongside cinematic films, image-led storytelling, product campaigns, music visuals, education, and social video.</p>
           </div>
-          <StudioPreview />
-          <p className="studio-disclaimer">Sample photographs show a creative direction. They are not AI-generated results.</p>
-        </section>
-
-        <section id="capabilities" className="capabilities-section container section" aria-labelledby="capabilities-title">
-          <div className="section-heading">
-            <div><p className="eyebrow">02 / THE POSSIBILITIES</p><h2 id="capabilities-title">Different stories.<br />Your way of seeing.</h2></div>
-            <p>Document a place. Explore an idea. Tell a brand’s story.
-              We’re planning the tools to help you find your own visual language.</p>
-          </div>
-          <div className="visual-studies" aria-label="Photographic studies for different creative directions">
-            <figure className="study study-city">
-              <Photo name="city" sizes="(max-width: 600px) 45vw, 30vw" />
-              <figcaption><span>01 / DOCUMENTARY</span><span>Life, unscripted.</span></figcaption>
-            </figure>
-            <figure className="study study-architecture">
-              <Photo name="architecture" sizes="(max-width: 600px) 90vw, 40vw" />
-              <figcaption><span>02 / ARCHITECTURE</span><span>A sense of space.</span></figcaption>
-            </figure>
-            <figure className="study study-forest">
-              <Photo name="forest" sizes="(max-width: 600px) 45vw, 30vw" />
-              <figcaption><span>03 / EXPLORATION</span><span>Outside the everyday.</span></figcaption>
-            </figure>
-          </div>
-          <div className="studies-caption"><span>Licensed photographic studies. Not generated with Vidio AI.</span><a href={photoCredits}>Image credits <Icon name="arrow" /></a></div>
-          <div className="toolkit-heading"><h3>The planned toolkit</h3><span>All capabilities below are in development</span></div>
-          <div className="capability-groups">
-            {capabilityGroups.map((group) => (
-              <article className="capability-group" key={group.number}>
-                <span className="group-number">{group.number}</span>
-                <h3>{group.title}</h3>
-                <p className="group-description">{group.description}</p>
-                <dl>
-                  {group.features.map(([title, description]) => (
-                    <div key={title}><dt>{title}</dt><dd>{description}</dd></div>
-                  ))}
-                </dl>
+          <div className="creative-direction-list">
+            {creativeDirections.map((direction, index) => (
+              <article className="creative-direction-item" key={direction.title}>
+                <span className="creative-direction-number">0{index + 1}</span>
+                <h3>{direction.title}</h3>
+                <span>{direction.detail}</span>
               </article>
             ))}
           </div>
+          <p className="creative-direction-note">These creative tools are planned and are not yet available. The films in the reference room are independent works, not Vidio AI generations.</p>
         </section>
 
-        <section id="workflow" className="workflow-section" aria-labelledby="workflow-title">
-          <div className="container section">
-            <div className="section-heading">
-              <div><p className="eyebrow">03 / THE PROCESS</p><h2 id="workflow-title">Keep the story moving.</h2></div>
-              <p>The planned journey, from the first note to the final review.
-                Your creative decisions stay at the center.</p>
-            </div>
-            <ol className="workflow-list">
-              {workflow.map(([title, description], index) => (
-                <li key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></li>
-              ))}
-            </ol>
+        <section id="available-now" className="container current-product-section" aria-labelledby="current-product-title">
+          <div className="current-product-copy">
+            <p className="eyebrow"><span className="status-dot" /> AVAILABLE NOW</p>
+            <h2 id="current-product-title">Give your next idea<br />a place to begin.</h2>
+            <p>Create a project brief with a title, creative direction, and intended format. Your briefs are saved to your private account. Nothing is generated or sent to an AI service.</p>
+            <Link className="button button-primary" to={primaryHref}>
+              {session ? 'Open your workspace' : 'Create a free account'} <Icon name="arrow" />
+            </Link>
           </div>
-        </section>
-
-        <section id="development" className="container closing section" aria-labelledby="development-title">
-          <div><p className="eyebrow"><span className="status-dot" /> CURRENTLY IN DEVELOPMENT</p><h2 id="development-title">The next chapter<br />is taking shape.</h2></div>
-          <div className="closing-copy">
-            <p>We’re building Vidio AI one considered step at a time.</p>
-            <p>Generation, editing, personal libraries and social publishing are planned.
-              They aren’t available yet, and there’s no public launch date.</p>
-            <a className="text-link" href="#studio" onClick={closeMenu}>Take another look at the studio <Icon name="arrow" /></a>
+          <div className="current-product-card">
+            <span className="current-product-card-icon" aria-hidden="true">✎</span>
+            <span className="current-product-card-label">YOUR CREATIVE WORKSPACE</span>
+            <h3>Cloud project briefs</h3>
+            <p>Create, revisit, update, and delete briefs saved privately to your signed-in account. Existing browser drafts are kept separate.</p>
+            <Link to={primaryHref}>Go to project briefs <Icon name="arrow" /></Link>
           </div>
         </section>
       </main>
 
-      <footer className="container site-footer">
-        <a href="#" className="brand-link" aria-label="Vidio AI back to top" onClick={closeMenu}><Brand /></a>
-        <p>A little perspective changes the story.</p>
-        <div><a href={photoCredits}>Photography credits</a><span>© {new Date().getFullYear()} Vidio AI</span></div>
+      <footer className="container site-footer cartoon-footer">
+        <Link to="/" className="brand-link" aria-label="Vidio AI home"><Brand /></Link>
+        <p>Video ideas, brought to life.</p>
+        <div>
+          <Link to={session ? '/app' : '/auth/login'}>{session ? 'Workspace' : 'Sign in'}</Link>
+          <a href={`${import.meta.env.BASE_URL}animation-film-credits.md`}>Film credits</a>
+          <span>© {new Date().getFullYear()} Vidio AI</span>
+        </div>
       </footer>
-    </>
+    </div>
   )
 }
 
-export default App
+export default LandingPage

@@ -6,9 +6,9 @@ All five photographs were obtained from Pexels on 2026-10-16 under the [Pexels L
 
 | Local filename prefix | Photograph and original page | Creator | Use |
 | --- | --- | --- | --- |
-| `coast-` | [Drone Shot of Sea Waves Crashing on Rocks](https://www.pexels.com/photo/drone-shot-of-sea-waves-crashing-on-rocks-12356804/) | Fran Bertucci | Hero, main studio frame, scene timeline |
-| `forest-` | [Aerial Footage of Trees covered in Fog](https://www.pexels.com/photo/aerial-footage-of-trees-covered-in-fog-8414412/) | Mikhail Nilov | Studio scene, visual-direction strip |
-| `dunes-` | [Sand Dunes in Desert](https://www.pexels.com/photo/sand-dunes-in-desert-23522919/) | Henrik Le-Botos | Studio scene, visual-direction strip |
+| `coast-` | [Drone Shot of Sea Waves Crashing on Rocks](https://www.pexels.com/photo/drone-shot-of-sea-waves-crashing-on-rocks-12356804/) | Fran Bertucci | Hero, main studio frame, scene timeline, story-world photo reference |
+| `forest-` | [Aerial Footage of Trees covered in Fog](https://www.pexels.com/photo/aerial-footage-of-trees-covered-in-fog-8414412/) | Mikhail Nilov | Studio scene, visual-direction strip, story-world photo reference |
+| `dunes-` | [Sand Dunes in Desert](https://www.pexels.com/photo/sand-dunes-in-desert-23522919/) | Henrik Le-Botos | Studio scene, visual-direction strip, story-world photo reference |
 | `architecture-` | [Concrete Modern Architecture](https://www.pexels.com/photo/concrete-modern-architecture-11312129/) | Nenyasha Manzvera | Architectural visual direction |
 | `city-` | [Rainy Night Street Scene in Tokyo](https://www.pexels.com/photo/rainy-night-street-scene-in-tokyo-31118383/) | Andrea Román | Documentary visual direction |
 

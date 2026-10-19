@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import type { Project } from '../data/projects'
 import { getCloudProjectRepository } from '../data/cloudProjects'
+import { briefTemplates, createBriefPath } from '../data/briefTemplates'
 import CreativeInspiration from '../components/CreativeInspiration'
 import { Icon } from '../components/Brand'
 import './DashboardPage.css'
@@ -113,6 +114,24 @@ function DashboardPage() {
             <li key={name}>
               <span>{name}</span>
               <small>{status}</small>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="brief-starters" aria-labelledby="brief-starters-heading">
+        <div className="brief-starters-heading">
+          <h2 id="brief-starters-heading">Choose a creative direction.</h2>
+          <p>Start with an editable brief template, or create a blank brief above. Nothing is saved until you choose Save project.</p>
+        </div>
+        <ul className="brief-template-grid">
+          {briefTemplates.map((template) => (
+            <li key={template.id}>
+              <Link className="brief-template-card" to={createBriefPath(template.id)}>
+                <strong>{template.label}</strong>
+                <span>{template.description}</span>
+                <span className="brief-template-format">{template.format} brief <span aria-hidden="true">↗</span></span>
+              </Link>
             </li>
           ))}
         </ul>

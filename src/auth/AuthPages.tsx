@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Brand } from '../components/Brand'
-import StorybookArt from '../components/StorybookArt'
+import { Photo } from '../components/Photo'
 import { getSafeAppRedirect, type AuthLocationState } from './auth'
 import { useAuth } from './AuthContext'
 
@@ -52,15 +52,19 @@ export function RedirectAuthenticatedUser() {
   return <Outlet />
 }
 
-function StoryArtPanel() {
+function CreativeMediaPanel() {
   return (
-    <aside className="auth-story-side" aria-label="Original storybook concept artwork">
-      <div className="auth-story-art"><StorybookArt /></div>
-      <div className="auth-story-copy">
-        <p className="eyebrow">AN ORIGINAL STORY CONCEPT</p>
-        <h2>A little wonder<br />goes a long way.</h2>
-        <p>Mira and the moonseed is original illustrative artwork—not an AI-generated video or a working product preview.</p>
+    <aside className="auth-creative-side" aria-label="Creative visual directions">
+      <div className="auth-creative-heading"><span>THE CREATIVE OUTLOOK</span><span>01 / 03</span></div>
+      <div className="auth-creative-main">
+        <Photo name="coast" sizes="55vw" priority />
+        <div className="auth-creative-caption"><span>CINEMATIC / NATURE</span><h2>Every great film<br />starts with a point of view.</h2></div>
       </div>
+      <div className="auth-creative-strip">
+        <figure><Photo name="city" sizes="25vw" /><figcaption>Culture &amp; social</figcaption></figure>
+        <figure><Photo name="architecture" sizes="25vw" /><figcaption>Design &amp; brand stories</figcaption></figure>
+      </div>
+      <p className="auth-media-credit">Photography for creative inspiration. <a href={`${import.meta.env.BASE_URL}photography-credits.md`}>Photographers &amp; licences ↗</a></p>
     </aside>
   )
 }
@@ -77,7 +81,7 @@ function AuthLayout({ children, heading, description }: {
         <Link to="/" className="auth-brand" aria-label="Vidio AI home"><Brand /></Link>
         <div className="auth-form-wrap">
           {initializationError && <AuthUnavailable />}
-          <p className="eyebrow">VIDIO AI · STORY STUDIO</p>
+          <p className="eyebrow">VIDIO AI · CREATIVE WORKSPACE</p>
           <h1>{heading}</h1>
           <p className="auth-description">{description}</p>
           {children}
@@ -85,7 +89,7 @@ function AuthLayout({ children, heading, description }: {
         </div>
         <Link className="auth-back-link" to="/">Back to Vidio AI</Link>
       </div>
-      <StoryArtPanel />
+      <CreativeMediaPanel />
     </main>
   )
 }
@@ -154,6 +158,11 @@ export function SignUpPage() {
     setConfirmationRequired(false)
     const data = new FormData(event.currentTarget)
     const password = String(data.get('password') ?? '')
+    if (password.length < 12) {
+      setError('Use at least 12 characters for your password.')
+      setBusy(false)
+      return
+    }
     if (password !== String(data.get('confirmPassword') ?? '')) {
       setError('Those passwords do not match.')
       setBusy(false)
@@ -167,7 +176,7 @@ export function SignUpPage() {
   }
 
   return (
-    <AuthLayout heading="Make room for wonder." description="Create an account for your Vidio AI workspace.">
+    <AuthLayout heading="Your next idea starts here." description="Create an account for your Vidio AI workspace.">
       <form className="auth-form" onSubmit={(event) => void submit(event)}>
         <label className="auth-field">
           <span>Email address</span>
@@ -175,12 +184,12 @@ export function SignUpPage() {
         </label>
         <label className="auth-field">
           <span>Password</span>
-          <input name="password" type="password" required minLength={8} autoComplete="new-password" />
-          <small>Use at least 8 characters.</small>
+          <input name="password" type="password" required aria-describedby="password-guidance" minLength={12} autoComplete="new-password" />
+          <small id="password-guidance">Use at least 12 characters.</small>
         </label>
         <label className="auth-field">
           <span>Confirm password</span>
-          <input name="confirmPassword" type="password" required minLength={8} autoComplete="new-password" />
+          <input name="confirmPassword" type="password" required minLength={12} autoComplete="new-password" />
         </label>
         <AuthFeedback message={error} error />
         {confirmationRequired && (
@@ -253,7 +262,7 @@ export function PasswordRecoveryPage() {
   }
   if (updated) {
     return (
-      <AuthLayout heading="Your password is updated." description="Your account is ready for the next chapter.">
+      <AuthLayout heading="Your password is updated." description="Your account is ready. Continue planning your next video.">
         <AuthFeedback message="Your new password is saved securely. Continue to your workspace." />
         <button className="auth-submit" type="button" onClick={() => navigate('/app', { replace: true })}>Continue to workspace</button>
       </AuthLayout>
@@ -274,6 +283,11 @@ export function PasswordRecoveryPage() {
     setError(undefined)
     const data = new FormData(event.currentTarget)
     const password = String(data.get('password') ?? '')
+    if (password.length < 12) {
+      setError('Use at least 12 characters for your password.')
+      setBusy(false)
+      return
+    }
     if (password !== String(data.get('confirmPassword') ?? '')) {
       setError('Those passwords do not match.')
       setBusy(false)
@@ -290,12 +304,12 @@ export function PasswordRecoveryPage() {
       <form className="auth-form" onSubmit={(event) => void submit(event)}>
         <label className="auth-field">
           <span>New password</span>
-          <input name="password" type="password" required minLength={8} autoComplete="new-password" autoFocus />
-          <small>Use at least 8 characters.</small>
+          <input name="password" type="password" required aria-describedby="password-guidance" minLength={12} autoComplete="new-password" autoFocus />
+          <small id="password-guidance">Use at least 12 characters.</small>
         </label>
         <label className="auth-field">
           <span>Confirm new password</span>
-          <input name="confirmPassword" type="password" required minLength={8} autoComplete="new-password" />
+          <input name="confirmPassword" type="password" required minLength={12} autoComplete="new-password" />
         </label>
         <AuthFeedback message={error} error />
         <button className="auth-submit" type="submit" disabled={busy}>

@@ -118,6 +118,7 @@
   display: block;
   width: 100%;
   padding: 0;
+  border: 0;
   color: inherit;
   background: transparent;
   text-align: left;
@@ -462,3 +463,10 @@
     transition: none;
   }
 }
+.video-preview { position: relative; width: 100%; height: 100%; background: #101512; }
+.video-preview > video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.video-preview-toggle { position: absolute; right: 16px; top: 16px; padding: 10px 16px; border: 1px solid rgb(255 255 255 / 50%); border-radius: 30px; color: white; background: rgb(15 22 18 / 85%); font-size: 14px; }
+.video-preview .inspiration-playback-error { min-height: 100%; color: #e5eadf; }
+.video-preview .inspiration-loading { bottom: 56px; }
+.featured-reference-credit { margin-top: 10px; color: #626a60; font-size: 12px; line-height: 1.6; }
+.featured-reference-credit a { text-decoration: underline; text-underline-offset: 3px; }

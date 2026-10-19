@@ -147,6 +147,18 @@ describe('Supabase authentication flows', () => {
     }))
   })
 
+  it('rejects registration passwords shorter than the required twelve characters', async () => {
+    renderRoutes('/auth/register')
+    changeField('email', 'reader@example.test')
+    changeField('password', 'short-pass')
+    changeField('confirmPassword', 'short-pass')
+    const password = document.querySelector('input[name="password"]')
+    expect(password).toHaveAttribute('minlength', '12')
+    fireEvent.submit(screen.getByRole('button', { name: 'Create account' }).closest('form')!)
+    expect(await screen.findByRole('alert')).toHaveTextContent('Use at least 12 characters')
+    expect(mocks.signUp).not.toHaveBeenCalled()
+  })
+
   it('requests recovery without revealing whether an account exists', async () => {
     renderRoutes('/auth/forgot-password')
     fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'reader@example.test' } })

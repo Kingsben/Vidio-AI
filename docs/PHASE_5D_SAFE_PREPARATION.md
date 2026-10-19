@@ -1,0 +1,37 @@
+# Phase 5D — safe Studio and platform preparation
+
+**Review date: 19 October 2026.** No generation request, external service call, Supabase query, migration, policy change, role grant, upload, commit, or push was made.
+
+## Studio review
+
+The Studio remains within the authenticated `/app` route. Prompt and output settings are local React state; the page has no generation submit handler and says that settings are not persisted or sent to the external demo. The local MP4 importer validates the file before creating a browser object URL, limits files to 250 MB, uses native playback controls, reports browser duration/dimensions and playback errors, and explicitly says the file is not uploaded or saved. Browser metadata does not establish the audio codec or presence of an audio stream.
+
+This pass corrected stale experiment copy that described the prior silent LTX 0.9.8 model. The Studio now identifies the pending LTX-2.5 audio/video experiment and links to the intended Space, while clearly saying it is awaiting quota reset and separate approval. No generation request is sent by that link. A **Clear preview** action now releases a selected local clip immediately; replacement and unmount continue to revoke their URLs. Existing responsive breakpoints stack the two-column builder and side cards on tablet/mobile, and reduce media metadata to two columns on mobile. Body/help text is 13–16 px with visible keyboard focus. Automated tests cover file acceptance/validation, playback metadata/error, replacement/unmount cleanup and clearing. Actual browser/device visual QA remains pending.
+
+## SQL draft checked against repository evidence
+
+There is no checked-in `supabase/` directory, migration, schema dump, or generated database types. The app's [`Database` type](../src/lib/supabase.ts) is the only local schema evidence: `public.projects` is modeled with string `id` and `user_id`, `title`, `brief`, `format`, and timestamps. [`cloudProjects.ts`](../src/data/cloudProjects.ts) selects those columns and filters reads/updates/deletes by `user_id`; inserts rely on the deployed database to assign the owner and enforce its policies.
+
+The review-only draft uses `auth.users(id)` UUID ownership, an owner/idempotency uniqueness constraint, a composite `(id,user_id)` key for events, owner-filtered select policies, and no client write policy. Those choices align with the application ownership model in principle. `project_id text` is compatible with the TypeScript string contract but does **not** prove the deployed Postgres type, FK, cascade behavior, or projects table constraints. There is no safe basis in this checkout to decide whether it should be `text` or `uuid`, or to assert the current grants/RLS policies. The draft also intentionally has no `projects` FK, Storage bucket, RPC, or worker write path.
+
+Before migration review, obtain a schema-only export for `public.projects` and relevant grants/policies (no private row data), confirm owner-write behavior and auth deletion semantics, and compare it with the draft. Then decide whether to add a real project FK and what delete behavior should apply. Independently review table grants/default privileges, RLS, idempotency transaction semantics, quota reservation, event immutability, and private object deletion/expiry. Keep the SQL marked review-only until this review is complete. Two-account isolation tests are still required. No cloud metadata or data was queried in this pass.
+
+## Smallest secure backend prerequisites
+
+1. Select a trusted server runtime and a durable queue/worker arrangement. The browser calls only a same-origin Vidio API with its current Supabase session; the server validates the token, derives the owner from the verified subject, and ignores any client-supplied owner/provider/worker identity.
+2. After a reviewed migration, create jobs atomically with idempotency and reserve per-user and global quotas in the same transaction. Enforce one active job per user, bounded queue depth, global concurrency, model/settings allowlists, prompt and output limits, and daily request/compute caps on the server.
+3. Give workers a separate server-held credential and minimal job-claim/write ability. Use leases, heartbeats, explicit state transitions, bounded intentional retry, cancellation acknowledgement, timeout recovery, and quota reconciliation on terminal failure/cancellation.
+4. Store validated outputs in a private bucket under server-generated opaque keys. Persist owner, job, checksum, media metadata, size and expiry; never accept a client storage key as ownership proof. Serve downloads only after fresh owner authorization through short-lived signed URLs. Set byte/user/global storage caps and a deletion worker that removes both metadata and objects at expiry or account deletion.
+5. Keep prompts and media out of routine logs. Validate output decode, tracks, dimensions, duration and size before publication. Distinguish provider refusal, quota exhaustion, worker timeout, invalid output and storage failure; expose only safe error messages and a real worker status trail.
+
+The public LTX Space remains a one-off manual experiment only. Its browser-facing demo is not a production worker endpoint; do not expose its interface to arbitrary Vidio users or put provider credentials in React/Vite configuration.
+
+## Administrator plan
+
+No administrator role or route exists as a result of this phase. For a later implementation, maintain roles in a server-managed table or trusted signed claim that users cannot edit. Provision an initial administrator through an out-of-band, MFA-protected, two-person-reviewed operator process. Each privileged API request must validate the session server-side and perform a live role/revocation check; UI visibility is not authorization. Default-deny permissions should cover only platform operations such as aggregate queue health, model/worker disablement, service limits, account status and abuse reports.
+
+Keep ordinary project and generated-asset RLS owner-only. Administrators should not browse project briefs, prompts, images, videos, or storage contents by default. Write append-only audit records for actor, action, target ID, reason, timestamp and request ID, without media, prompts, tokens, or signed URLs. Alert on role grants/removals and exceptional operations. Any future support access to content needs a separately approved, narrow, time-bound case permission with MFA/re-authentication and audit. Test self-escalation, stale-token/revocation behavior, owner isolation and admin content denial with two distinct accounts before rollout.
+
+## Verification and remaining gates
+
+The local Studio update has focused tests. `npm.cmd run build` passed; `npm.cmd run lint` passed; the full serial test run passed all 88 tests across 13 files, including all 8 Studio tests. The initial parallel test run had transient failures under 13 workers; the serial rerun passed. `git diff --check` passed with only line-ending warnings on pre-existing CSS files. No approval is needed for this local reversible work. Before the next external generation, obtain both confirmation of at least 120 seconds of free quota and separate one-request authorization. Before database integration, review the actual schema-only export and approve a specific migration/RLS/storage design. Before a production backend, separately approve the worker/provider, secret handling, storage/retention, quota policy and deployment plan. No Supabase changes or administrator grants are authorized by this preparation.

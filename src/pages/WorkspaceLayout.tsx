@@ -40,6 +40,10 @@ function WorkspaceLayout() {
             <Icon name="image" />
             Inspiration
           </NavLink>
+          <NavLink to="/app/studio" className={({ isActive }) => isActive ? 'workspace-nav-link is-active' : 'workspace-nav-link'}>
+            <Icon name="edit" />
+            AI Video Studio
+          </NavLink>
           <NavLink to="/app/projects/new" className={({ isActive }) => isActive ? 'workspace-nav-link is-active' : 'workspace-nav-link'}>
             <Icon name="edit" />
             New brief

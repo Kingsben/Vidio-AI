@@ -12,6 +12,7 @@ import { AuthProvider } from './auth/AuthProvider'
 import DashboardPage from './pages/DashboardPage'
 import LandingPage from './pages/LandingPage'
 import ProjectEditorPage from './pages/ProjectEditorPage'
+import StudioPage from './pages/StudioPage'
 import WorkspaceLayout from './pages/WorkspaceLayout'
 import './Workspace.css'
 import './auth/Auth.css'
@@ -40,6 +41,7 @@ function AppRoutes() {
       <Route element={<RequireSession />}>
         <Route path="/app" element={<WorkspaceLayout />}>
           <Route index element={<DashboardPage />} />
+          <Route path="studio" element={<StudioPage />} />
           <Route path="projects/new" element={<ProjectEditorPage key="new" />} />
           <Route path="projects/:projectId" element={<ProjectEditorPage key="edit" />} />
         </Route>

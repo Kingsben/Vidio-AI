@@ -16,12 +16,19 @@ const { repository } = vi.hoisted(() => ({
 }))
 
 vi.mock('../data/cloudProjects', () => ({ getCloudProjectRepository: () => repository }))
+
 vi.mock('../auth/AuthContext', () => ({ useAuth: () => ({ session: { user: { id: 'user-test' } } }) }))
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  vi.restoreAllMocks()
+})
 beforeEach(() => {
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {})
+  vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue()
   vi.clearAllMocks()
   repository.list.mockResolvedValue([])
+  vi.spyOn(HTMLMediaElement.prototype, 'canPlayType').mockReturnValue('probably')
 })
 
 function renderDashboard() {
@@ -32,11 +39,16 @@ function renderDashboard() {
   )
 }
 
+function loadGalleryPosters(gallery: HTMLElement) {
+  gallery.querySelectorAll('img').forEach((poster) => fireEvent.load(poster))
+}
+
 describe('DashboardPage', () => {
   it('filters real inspiration videos by the categories that have matching footage', async () => {
     renderDashboard()
 
     const gallery = screen.getByRole('region', { name: /a world of ideas in motion/i })
+    loadGalleryPosters(gallery)
     expect(within(gallery).getByRole('button', { name: 'Cinematic' })).toBeInTheDocument()
     expect(within(gallery).getByRole('button', { name: 'Animation' })).toBeInTheDocument()
     expect(within(gallery).getByRole('button', { name: 'Marketing' })).toBeInTheDocument()
@@ -44,22 +56,22 @@ describe('DashboardPage', () => {
     expect(within(gallery).getByRole('button', { name: 'Nature' })).toBeInTheDocument()
     expect(within(gallery).getByRole('button', { name: 'Educational' })).toBeInTheDocument()
     expect(within(gallery).getByRole('button', { name: 'Social Content' })).toBeInTheDocument()
-    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(15)
+    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(6)
     expect(gallery.querySelectorAll('video')).toHaveLength(0)
 
     fireEvent.click(within(gallery).getByRole('button', { name: 'Marketing' }))
-    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(2)
+    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(1)
     fireEvent.click(within(gallery).getByRole('button', { name: /play biore guard/i }))
     const marketingPlayer = screen.getByLabelText(/biore guard.*independent reference video/i, { selector: 'video' })
-    expect(marketingPlayer.querySelector('source')).toHaveAttribute('src', expect.stringContaining('Biore_Guard_'))
+    expect(marketingPlayer.querySelector('source')).toHaveAttribute('src', expect.stringContaining('biore-guard-ad.mp4'))
     expect(marketingPlayer).toHaveAttribute('preload', 'none')
     fireEvent.click(screen.getByRole('button', { name: 'Close video' }))
 
     fireEvent.click(within(gallery).getByRole('button', { name: 'Animation' }))
-    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(9)
-    fireEvent.click(within(gallery).getByRole('button', { name: /play big buck bunny/i }))
-    expect(screen.getByLabelText(/big buck bunny.*independent reference video/i, { selector: 'video' }).querySelector('source'))
-      .toHaveAttribute('src', expect.stringContaining('.480p.vp9.webm'))
+    expect(within(gallery).getAllByRole('button', { name: /play .* independent reference film/i })).toHaveLength(1)
+    fireEvent.click(within(gallery).getByRole('button', { name: /play sintel/i }))
+    expect(screen.getByLabelText(/sintel.*independent reference video/i, { selector: 'video' }).querySelector('source'))
+      .toHaveAttribute('src', expect.stringContaining('sintel-trailer.mp4'))
   })
 
   it('keeps cloud project creation available and clearly labels unfinished tools', async () => {
@@ -80,13 +92,26 @@ describe('DashboardPage', () => {
     renderDashboard()
 
     const gallery = screen.getByRole('region', { name: /a world of ideas in motion/i })
-    fireEvent.click(within(gallery).getByRole('button', { name: /play artemis iii/i }))
-    fireEvent.error(screen.getByLabelText(/artemis iii.*independent reference video/i, { selector: 'video' }))
+    loadGalleryPosters(gallery)
+    fireEvent.click(within(gallery).getByRole('button', { name: /play pico sacro/i }))
+    fireEvent.error(screen.getByLabelText(/pico sacro.*independent reference video/i, { selector: 'video' }))
 
     expect(screen.getByRole('alert')).toHaveTextContent('could not be played')
-    expect(screen.getByRole('link', { name: /open source page/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /open original source/i })).toHaveAttribute(
       'href',
-      expect.stringContaining('Artemis_III_Core_Stage'),
+      'https://commons.wikimedia.org/wiki/File:Pico_Sacro_(TIMELAPSE).webm',
     )
   })
+  it('links editable creative directions to supported template URLs', () => {
+    renderDashboard()
+    const starters = screen.getByRole('region', { name: 'Choose a creative direction.' })
+    expect(within(starters).getAllByRole('link')).toHaveLength(9)
+    expect(within(starters).getByRole('link', { name: /product advertisement/i })).toHaveAttribute('href', '/app/projects/new?template=product-ad')
+    const gallery = screen.getByRole('region', { name: /a world of ideas in motion/i })
+    fireEvent.click(within(gallery).getByRole('button', { name: 'Marketing' }))
+    expect(within(gallery).getByRole('link', { name: 'Create marketing brief' })).toHaveAttribute('href', '/app/projects/new?template=product-ad')
+    fireEvent.click(within(gallery).getByRole('button', { name: /play biore guard/i }))
+    expect(within(screen.getByRole('dialog')).getByRole('link', { name: 'Create a brief in this style' })).toHaveAttribute('href', '/app/projects/new?template=product-ad')
+  })
+
 })

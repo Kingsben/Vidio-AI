@@ -1,0 +1,126 @@
+[
+  {
+    "id": "abstract-motion-graphics",
+    "bytes": 478969,
+    "posterBytes": 64652,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "960x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "f2eaebb1686b9b2c08cbbfd8369d752f5b98fa8f15323d013604dddff3518002",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/478969",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": false,
+    "audioStreams": []
+  },
+  {
+    "id": "biore-guard-ad",
+    "bytes": 2241034,
+    "posterBytes": 19480,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "960x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "61037b6b4d0631b61a98b195d008c2c419f8ea97776ecdec93f325fb71738cf3",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/2241034",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": true,
+    "audioStreams": [
+      "Stream #0:1[0x2](eng): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 96 kb/s (default)"
+    ]
+  },
+  {
+    "id": "five-minutes-in-orbit",
+    "bytes": 415379,
+    "posterBytes": 14028,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "810x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "ceb32ccdec990ea0b4777c20a5b78220385c1e6a0a88da2b183df735ba176fc5",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/415379",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": false,
+    "audioStreams": []
+  },
+  {
+    "id": "pico-sacro-timelapse",
+    "bytes": 981607,
+    "posterBytes": 22624,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "960x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "c360ac961452fe03a1426ad2ac0b34d63e4fb0c50b689b6554e32cac82845424",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/981607",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": false,
+    "audioStreams": []
+  },
+  {
+    "id": "shrinking-aral-sea",
+    "bytes": 810331,
+    "posterBytes": 35654,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "540x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "14087b13b8c8abbb947555408384f9318c43397ba35a9ef16bf69bdb9d388d73",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/810331",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": false,
+    "audioStreams": []
+  },
+  {
+    "id": "sintel-trailer",
+    "bytes": 1748657,
+    "posterBytes": 18756,
+    "format": "H.264 Constrained Baseline / MP4 / yuv420p",
+    "dimensions": "960x540",
+    "durationSeconds": 12,
+    "decodedSamples": 12,
+    "distinctFrames": 12,
+    "sha256": "59c2464d5394bfeb8a71d58ca2d12248247cbb5c42c2b21b64bdef60414e5ea4",
+    "serving": {
+      "status": 206,
+      "type": "video/mp4",
+      "range": "bytes 0-4095/1748657",
+      "read": 4096
+    },
+    "chromeVerification": "Moving frames confirmed by user before Phase 4C; restored audio untested in browser",
+    "hasAudibleAudio": true,
+    "audioStreams": [
+      "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 96 kb/s (default)"
+    ]
+  }
+]

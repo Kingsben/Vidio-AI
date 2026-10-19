@@ -27,3 +27,7 @@ The image bytes were downloaded from Pexels' own image CDN, using the matching p
 Downloaded at 2000px width and converted locally with Pillow to WebP at 400, 800, and 1600px widths (quality 81, Lanczos resizing). Aspect ratios are preserved. EXIF orientation is applied; exported files omit original metadata. The page uses responsive `srcset`, local Vite asset imports, intentional CSS crops, and a restrained saturation adjustment. Below-fold images are lazy-loaded. Only optimized files are retained.
 
 The architecture photo's original page identifies Nenyasha Manzvera as the photographer. No asset substitutions were required.
+
+## Authentication pages
+
+The account pages reuse the licensed coast, city, and architecture photographs above as still creative references. They are not video frames or generated output. The pages link directly to these credits.

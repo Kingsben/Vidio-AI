@@ -1,0 +1,214 @@
+[
+  {
+    "id": "sintel-trailer",
+    "excerptStartSeconds": 12,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [
+        "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 126 kb/s (default)"
+      ],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 854x480, 537 kb/s, 24 fps, 24 tbr, 24 tbn (default)"
+      ],
+      "volumeMeasurements": [
+        "mean_volume: -17.1 dB",
+        "max_volume: 0.0 dB"
+      ]
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(progressive), 960x540, 1063 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": true,
+    "synchronization": {
+      "method": "Original source excerpt vs AAC decode, first 3 seconds, normalized correlation at 1kHz, +/-100ms search",
+      "bestOffsetMilliseconds": 0,
+      "correlation": 0.99855,
+      "videoStreamUnchanged": true
+    },
+    "finalPreview": {
+      "audioStreams": [
+        "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 96 kb/s (default)"
+      ],
+      "bytes": 1748657,
+      "sha256": "59c2464d5394bfeb8a71d58ca2d12248247cbb5c42c2b21b64bdef60414e5ea4",
+      "fullDecodePassed": true,
+      "volumeMeasurements": [
+        "mean_volume: -17.2 dB",
+        "max_volume: 0.0 dB"
+      ]
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  },
+  {
+    "id": "pico-sacro-timelapse",
+    "excerptStartSeconds": 3,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [
+        "Stream #0:1(eng): Audio: opus, 48000 Hz, stereo, fltp (default)"
+      ],
+      "videoStreams": [
+        "Stream #0:0: Video: vp9 (Profile 0), yuv420p(tv, bt709, progressive), 1920x1080, SAR 1:1 DAR 16:9, 25 fps, 25 tbr, 1k tbn (default)"
+      ],
+      "volumeMeasurements": [
+        "mean_volume: -91.0 dB",
+        "max_volume: -91.0 dB"
+      ]
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 960x540 [SAR 1:1 DAR 16:9], 653 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": false,
+    "synchronization": {
+      "method": "No audible source excerpt; no audio fabricated"
+    },
+    "finalPreview": {
+      "audioStreams": [],
+      "bytes": 981607,
+      "sha256": "c360ac961452fe03a1426ad2ac0b34d63e4fb0c50b689b6554e32cac82845424",
+      "fullDecodePassed": true
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  },
+  {
+    "id": "abstract-motion-graphics",
+    "excerptStartSeconds": 3,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0: Video: vp9 (Profile 0), yuv420p(tv, progressive), 1280x720, SAR 1:1 DAR 16:9, 29.97 fps, 29.97 tbr, 1k tbn (default)"
+      ],
+      "volumeMeasurements": []
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(progressive), 960x540 [SAR 1:1 DAR 16:9], 317 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": false,
+    "synchronization": {
+      "method": "No audible source excerpt; no audio fabricated"
+    },
+    "finalPreview": {
+      "audioStreams": [],
+      "bytes": 478969,
+      "sha256": "f2eaebb1686b9b2c08cbbfd8369d752f5b98fa8f15323d013604dddff3518002",
+      "fullDecodePassed": true
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  },
+  {
+    "id": "biore-guard-ad",
+    "excerptStartSeconds": 4,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [
+        "Stream #0:1(eng): Audio: opus, 48000 Hz, stereo, fltp (default)"
+      ],
+      "videoStreams": [
+        "Stream #0:0: Video: av1 (libaom-av1) (Main), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr, 1k tbn (default)"
+      ],
+      "volumeMeasurements": [
+        "mean_volume: -12.5 dB",
+        "max_volume: 0.0 dB"
+      ]
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 960x540 [SAR 1:1 DAR 16:9], 1392 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": true,
+    "synchronization": {
+      "method": "Original source excerpt vs AAC decode, first 3 seconds, normalized correlation at 1kHz, +/-100ms search",
+      "bestOffsetMilliseconds": 0,
+      "correlation": 0.99812,
+      "videoStreamUnchanged": true
+    },
+    "finalPreview": {
+      "audioStreams": [
+        "Stream #0:1[0x2](eng): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 96 kb/s (default)"
+      ],
+      "bytes": 2241034,
+      "sha256": "61037b6b4d0631b61a98b195d008c2c419f8ea97776ecdec93f325fb71738cf3",
+      "fullDecodePassed": true,
+      "volumeMeasurements": [
+        "mean_volume: -12.8 dB",
+        "max_volume: 0.0 dB"
+      ]
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  },
+  {
+    "id": "shrinking-aral-sea",
+    "excerptStartSeconds": 1,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0: Video: vp9 (Profile 1), yuv444p(tv), 720x720, SAR 1:1 DAR 1:1, 25 fps, 25 tbr, 1k tbn (default)"
+      ],
+      "volumeMeasurements": []
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](und): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(progressive), 540x540 [SAR 1:1 DAR 1:1], 538 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": false,
+    "synchronization": {
+      "method": "No audible source excerpt; no audio fabricated"
+    },
+    "finalPreview": {
+      "audioStreams": [],
+      "bytes": 810331,
+      "sha256": "14087b13b8c8abbb947555408384f9318c43397ba35a9ef16bf69bdb9d388d73",
+      "fullDecodePassed": true
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  },
+  {
+    "id": "five-minutes-in-orbit",
+    "excerptStartSeconds": 19,
+    "excerptDurationSeconds": 12,
+    "original": {
+      "audioStreams": [
+        "Stream #0:1(eng): Audio: opus, 48000 Hz, stereo, fltp (default)"
+      ],
+      "videoStreams": [
+        "Stream #0:0(eng): Video: vp9 (Profile 0), yuv420p(tv, bt709, progressive), 1920x1280, SAR 1:1 DAR 3:2, 30 fps, 30 tbr, 1k tbn (default)"
+      ],
+      "volumeMeasurements": [
+        "mean_volume: -91.0 dB",
+        "max_volume: -91.0 dB"
+      ]
+    },
+    "previousPreview": {
+      "audioStreams": [],
+      "videoStreams": [
+        "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 810x540 [SAR 1:1 DAR 3:2], 275 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+      ]
+    },
+    "sourceAudible": false,
+    "synchronization": {
+      "method": "No audible source excerpt; no audio fabricated"
+    },
+    "finalPreview": {
+      "audioStreams": [],
+      "bytes": 415379,
+      "sha256": "ceb32ccdec990ea0b4777c20a5b78220385c1e6a0a88da2b183df735ba176fc5",
+      "fullDecodePassed": true
+    },
+    "browserEvidence": "Earlier user confirmation: moving frames work in Chrome. New audio playback has not been audited in a browser."
+  }
+]

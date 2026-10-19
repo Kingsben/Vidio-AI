@@ -3,43 +3,65 @@ import { Link } from 'react-router-dom'
 import CreativeInspiration from '../components/CreativeInspiration'
 import { Brand, Icon } from '../components/Brand'
 import { useAuth } from '../auth/AuthContext'
+import { featuredReferenceVideo } from '../data/inspirationVideos'
+import { VideoPreview } from '../components/VideoPreview'
 import '../App.css'
 import './LandingPage.css'
 
 const creativeDirections = [
   {
     title: 'Text to video',
-    detail: 'PROMPT-LED CREATION',
+    detail: 'Shape a scene from a written idea.',
   },
   {
     title: 'Image to video',
-    detail: 'STILLS INTO MOTION',
+    detail: 'Bring a still frame into motion.',
   },
   {
     title: 'Cinematic stories',
-    detail: 'REALISM & ATMOSPHERE',
+    detail: 'Build atmosphere, pacing, and feeling.',
   },
   {
     title: 'Cartoons & animation',
-    detail: '2D, 3D & CHARACTER',
+    detail: 'Explore expressive worlds and characters.',
   },
   {
     title: 'Marketing & products',
-    detail: 'CAMPAIGNS WITH IMPACT',
+    detail: 'Give launches and products a point of view.',
   },
   {
     title: 'Music & motion',
-    detail: 'VISUAL RHYTHM',
+    detail: 'Create visuals that move with a sound.',
   },
   {
     title: 'Learning & education',
-    detail: 'IDEAS MADE CLEAR',
+    detail: 'Make information visual and memorable.',
   },
   {
     title: 'Social shorts',
-    detail: 'MADE FOR EVERY FEED',
+    detail: 'Plan quick stories for every feed.',
   },
 ]
+
+function FeaturedReferencePlayer() {
+  return (
+    <figure className="featured-reference">
+      <div className="featured-reference-frame">
+        <VideoPreview video={featuredReferenceVideo} />
+      </div>
+      <figcaption className="featured-reference-caption">
+        <div>
+          <span>FEATURED REFERENCE <span aria-hidden="true">·</span> INDEPENDENT FILM</span>
+          <strong>{featuredReferenceVideo.title}</strong>
+        </div>
+        <a href={featuredReferenceVideo.sourcePage} target="_blank" rel="noreferrer" aria-label={`View ${featuredReferenceVideo.title} source`}>
+          ↗
+        </a>
+      </figcaption>
+      <p className="featured-reference-credit">{featuredReferenceVideo.creator} · <a href={featuredReferenceVideo.licenseUrl}>{featuredReferenceVideo.license}</a> · 12-second excerpt, resized. {featuredReferenceVideo.audioNote}.</p>
+    </figure>
+  )
+}
 
 function LandingPage() {
   const { session } = useAuth()
@@ -86,10 +108,10 @@ function LandingPage() {
       <main id="main" tabIndex={-1}>
         <section className="cartoon-hero container" aria-labelledby="hero-title">
           <div className="cartoon-hero-copy">
-            <p className="eyebrow"><span className="status-dot" /> AN AI VIDEO STUDIO IN DEVELOPMENT</p>
-            <h1 id="hero-title">Ideas, in <span>motion.</span></h1>
+            <p className="eyebrow"><span className="status-dot" /> THE VIDEO STUDIO FOR WHAT’S NEXT</p>
+            <h1 id="hero-title">Make room for <span>the unexpected.</span></h1>
             <p className="cartoon-hero-description">
-              Explore independent film and reference footage for cinematic stories, animation, products, nature, and more.
+              A more considered way to shape video ideas — from the first line of a brief to the feeling of a finished frame.
             </p>
             <div className="cartoon-hero-actions">
               <Link className="button button-primary" to={primaryHref} onClick={closeMenu}>
@@ -97,8 +119,9 @@ function LandingPage() {
               </Link>
               <a className="text-link" href="#inspiration" onClick={closeMenu}>Explore video styles <Icon name="down" /></a>
             </div>
-            <p className="cartoon-hero-note">Create a project brief today. AI generation, editing, and publishing remain in development.</p>
+            <p className="cartoon-hero-note">Start with a private project brief. Video generation and editing are still in development.</p>
           </div>
+          <FeaturedReferencePlayer />
         </section>
 
         <div className="container">
@@ -115,7 +138,7 @@ function LandingPage() {
               <article className="creative-direction-item" key={direction.title}>
                 <span className="creative-direction-number">0{index + 1}</span>
                 <h3>{direction.title}</h3>
-                <span>{direction.detail}</span>
+                <p>{direction.detail}</p>
               </article>
             ))}
           </div>

@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { inspirationVideos, type InspirationCategory, inspirationCategories } from '../data/inspirationVideos'
+import { createBriefPath, getCategoryBriefTemplate } from '../data/briefTemplates'
+import { VideoPreview } from './VideoPreview'
 import './CreativeInspiration.css'
 
-const featuredVideoIds = ['big-buck-bunny', 'coffee-run', 'biore-guard-ad']
+const featuredVideoIds = ['five-minutes-in-orbit', 'sintel-trailer']
 
 function CreativeInspiration() {
   const [activeCategory, setActiveCategory] = useState<'All' | InspirationCategory>('All')
   const [activeVideoId, setActiveVideoId] = useState<string>()
-  const [playbackError, setPlaybackError] = useState(false)
+  const [failedPosterIds, setFailedPosterIds] = useState<string[]>([])
   const closeButton = useRef<HTMLButtonElement>(null)
   const opener = useRef<HTMLButtonElement>(null)
   const categoryVideos = activeCategory === 'All'
@@ -20,6 +23,11 @@ function CreativeInspiration() {
       (secondRank < 0 ? Number.MAX_SAFE_INTEGER : secondRank)
   })
   const activeVideo = inspirationVideos.find((video) => video.id === activeVideoId)
+  const categoryTemplate = activeCategory === 'All' ? undefined : getCategoryBriefTemplate(activeCategory)
+  const referenceTemplate = activeVideo
+    ? getCategoryBriefTemplate(activeCategory !== 'All' && activeVideo.category.includes(activeCategory)
+      ? activeCategory : activeVideo.category[0])
+    : undefined
 
   useEffect(() => {
     if (!activeVideo) return
@@ -43,7 +51,10 @@ function CreativeInspiration() {
 
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
+      if (dialog && !dialog.contains(document.activeElement)) {
+        event.preventDefault()
+        first.focus()
+      } else if (event.shiftKey && document.activeElement === first) {
         event.preventDefault()
         last.focus()
       } else if (!event.shiftKey && document.activeElement === last) {
@@ -61,8 +72,8 @@ function CreativeInspiration() {
   }, [activeVideo])
 
   function openVideo(id: string, button: HTMLButtonElement) {
+    document.querySelectorAll<HTMLVideoElement>('video').forEach((player) => player.pause())
     opener.current = button
-    setPlaybackError(false)
     setActiveVideoId(id)
   }
 
@@ -93,31 +104,38 @@ function CreativeInspiration() {
         ))}
       </div>
 
+      <div className="inspiration-create-brief">
+        <p>Found a direction you like? Plan an original video in an editable project brief.</p>
+        <Link className="workspace-button workspace-button-secondary" to={createBriefPath(categoryTemplate?.id)}>
+          {categoryTemplate ? `Create ${activeCategory.toLowerCase()} brief` : 'Create an original brief'}
+        </Link>
+      </div>
+
       <div className="inspiration-gallery" aria-live="polite" aria-relevant="additions removals">
-        {filteredVideos.map((video, index) => (
-          <article className={`inspiration-card${index < 3 ? ` inspiration-card-featured inspiration-card-featured-${index + 1}` : ''}`} key={video.id}>
-            <button
-              className="inspiration-card-play"
-              type="button"
-              aria-label={`Play ${video.title}, independent reference film`}
-              onClick={(event) => openVideo(video.id, event.currentTarget)}
-            >
-              <span className="inspiration-card-image">
-                <img src={video.thumbnail} alt="" loading="lazy" decoding="async" />
-                <span className="inspiration-card-play-icon" aria-hidden="true">▶</span>
-                <span className="inspiration-reference-label">INDEPENDENT REFERENCE</span>
-              </span>
-              <span className="inspiration-card-copy">
-                <span className="inspiration-card-categories">{video.category.join(' · ')}</span>
-                <strong>{video.title}</strong>
-                <span className="inspiration-card-description">{video.description}</span>
-              </span>
-            </button>
-            <a className="inspiration-card-source" href={video.sourcePage} target="_blank" rel="noreferrer">
-              Credits &amp; source <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        ))}
+        {filteredVideos.map((video, index) => {
+          return (
+            <article className={`inspiration-card${index === 0 ? ' inspiration-card-featured inspiration-card-featured-1' : ''}`} key={video.id}>
+              <button className="inspiration-card-play" type="button"
+                aria-label={`Play ${video.title}, independent reference film`}
+                onClick={(event) => openVideo(video.id, event.currentTarget)}>
+                <span className="inspiration-card-image">
+                  {failedPosterIds.includes(video.id) ? <span className="inspiration-missing-poster">{video.title}</span> : (
+                    <img src={video.thumbnail} alt="" loading="lazy" decoding="async"
+                      onError={() => setFailedPosterIds((current) => [...current, video.id])} />
+                  )}
+                  <span className="inspiration-card-play-icon" aria-hidden="true">▶</span>
+                  <span className="inspiration-reference-label">12 SECOND PREVIEW</span>
+                </span>
+                <span className="inspiration-card-copy">
+                  <span className="inspiration-card-categories">{video.category.join(' · ')}</span>
+                  <strong>{video.title}</strong>
+                  <span className="inspiration-card-description">{video.description}</span>
+                </span>
+              </button>
+              <a className="inspiration-card-source" href={video.sourcePage} target="_blank" rel="noreferrer">Credits &amp; source ↗</a>
+            </article>
+          )
+        })}
       </div>
 
       <p className="inspiration-disclaimer">Independent third-party films and reference works — never Vidio AI creations or endorsements.</p>
@@ -140,31 +158,14 @@ function CreativeInspiration() {
               </button>
             </header>
             <div className="inspiration-dialog-player">
-              {playbackError ? (
-                <div className="inspiration-playback-error" role="alert">
-                  <p>This reference could not be played. You can try again later or view it at its source.</p>
-                  <a href={activeVideo.sourcePage} target="_blank" rel="noreferrer">Open source page <span aria-hidden="true">↗</span></a>
-                </div>
-              ) : (
-                <video
-                  key={activeVideo.id}
-                  poster={activeVideo.poster}
-                  controls
-                  autoPlay
-                  playsInline
-                  preload="none"
-                  aria-label={`${activeVideo.title}, independent reference video`}
-                  onError={() => setPlaybackError(true)}
-                >
-                  <source src={activeVideo.source} type={activeVideo.mimeType} />
-                  Your browser does not support HTML video.{' '}
-                  <a href={activeVideo.sourcePage} target="_blank" rel="noreferrer">Open this reference at its source.</a>
-                </video>
-              )}
+              <VideoPreview key={activeVideo.id} video={activeVideo} startOnMount />
             </div>
             <div className="inspiration-dialog-footer">
-              <p>{activeVideo.description}<br /><span>{activeVideo.creator} · {activeVideo.license}</span></p>
-              <a href={activeVideo.sourcePage} target="_blank" rel="noreferrer">View film source <span aria-hidden="true">↗</span></a>
+              <p>{activeVideo.description}<br /><span>{activeVideo.creator} · <a href={activeVideo.licenseUrl} target="_blank" rel="noreferrer">{activeVideo.license}</a> · Excerpt, resized · {activeVideo.audioNote}</span></p>
+              <div className="inspiration-dialog-actions">
+                <Link className="workspace-button workspace-button-primary" to={createBriefPath(referenceTemplate?.id)} onClick={() => setActiveVideoId(undefined)}>Create a brief in this style</Link>
+                <a href={activeVideo.sourcePage} target="_blank" rel="noreferrer">View film source <span aria-hidden="true">↗</span></a>
+              </div>
             </div>
           </section>
         </div>
